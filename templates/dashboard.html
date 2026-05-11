@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — TaskFlow{% endblock %}
+
+{% block head %}
+<!-- Socket.IO Client -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">✦</span>
+            <span>TaskFlow</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" id="nav-tasks"
+               onclick="showSection('tasks', this)">
+                <span class="nav-icon">◈</span> Tasks
+            </a>
+            <a href="#" class="nav-item" id="nav-analytics"
+               onclick="showSection('analytics', this)">
+                <span class="nav-icon">◎</span> Analytics
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">{{ user.username[0].upper() }}</div>
+                <span>{{ user.username }}</span>
+            </div>
+            <a href="{{ url_for('auth.logout') }}" class="logout-btn" title="Logout">⏻</a>
+        </div>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <main class="main-content">
+
+        <!-- Live notification bar -->
+        <div id="notification-bar" class="notification-bar hidden"></div>
+
+        <!-- ── Tasks Section ── -->
+        <section id="section-tasks" class="content-section">
+
+            <div class="section-header">
+                <h2>My Tasks</h2>
+                <button class="btn btn-primary" onclick="openModal()">
+                    + New Task
+                </button>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterTasks('all', this)">All</button>
+                <button class="filter-btn" onclick="filterTasks('pending', this)">Pending</button>
+                <button class="filter-btn" onclick="filterTasks('in_progress', this)">In Progress</button>
+                <button class="filter-btn" onclick="filterTasks('completed', this)">Completed</button>
+            </div>
+
+            <!-- Task Cards -->
+            <div id="task-list" class="task-list">
+                <div class="loading">Loading tasks...</div>
+            </div>
+
+        </section>
+
+        <!-- ── Analytics Section ── -->
+        <section id="section-analytics" class="content-section hidden">
+
+            <div class="section-header">
+                <h2>Analytics</h2>
+            </div>
+
+            <div id="analytics-content">
+                <div class="loading">Loading analytics...</div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<!-- ── Add / Edit Task Modal ── -->
+<div id="task-modal" class="modal-overlay hidden">
+    <div class="modal">
+
+        <div class="modal-header">
+            <h3 id="modal-title">New Task</h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+            <input type="hidden" id="task-id">
+
+            <div class="form-group">
+                <label for="task-title">Title *</label>
+                <input type="text" id="task-title" placeholder="What needs to be done?">
+            </div>
+
+            <div class="form-group">
+                <label for="task-desc">Description</label>
+                <textarea id="task-desc" placeholder="Add details..." rows="3"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-status">Status</label>
+                    <select id="task-status">
+                        <option value="pending" selected>Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveTask()">Save Task</button>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
