@@ -60,26 +60,43 @@ Tables are created automatically on first run.
 ---
 
 ## Project Structure
+
+```
 taskmanager/
 ├── app.py
 ├── config.py
+├── extensions.py
 ├── requirements.txt
 ├── schema.sql
+├── .env.example
+├── .gitignore
+├── README.md
+│
 ├── models/
+│   ├── __init__.py
 │   ├── user.py
 │   └── task.py
+│
 ├── api/
+│   ├── __init__.py
 │   ├── auth.py
 │   ├── tasks.py
 │   ├── analytics.py
 │   └── views.py
+│
 ├── websocket/
+│   ├── __init__.py
 │   └── events.py
+│
 ├── templates/
 │   ├── base.html
 │   ├── login.html
 │   ├── register.html
 │   └── dashboard.html
+│
 └── static/
-    ├── css/style.css
-    └── js/dashboard.js
+    ├── css/
+    │   └── style.css
+    └── js/
+        └── dashboard.js
+```
